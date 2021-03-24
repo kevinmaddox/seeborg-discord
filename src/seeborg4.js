@@ -1,6 +1,9 @@
 "use strict";
 const assert = require("assert");
 
+const fs = require("fs");
+const writeFileAtomicSync = require("write-file-atomic").sync;
+
 const confmod = require("./confmod");
 const logger = require("./logging").getLogger(module);
 const {
@@ -141,8 +144,15 @@ class SeeBorg4 {
     logger.info('Connected servers:');
     this.client.guilds.forEach(guild => {
       logger.info(guild.name + ' (id: ' + guild.id + ')');
+      
+        // Load and initialize database for guild.
       this.database[guild.id] = new Database(this.config.databasePath + '/' + guild.id + '.json');
       this.database[guild.id].init();
+      
+      // Store separate txt file for info on which server this is, since a raw ID is not very descriptive
+      const infoFilePath = this.config.databasePath + '/' + guild.id + '.txt';
+      if (!fs.existsSync(infoFilePath))
+        writeFileAtomicSync(infoFilePath, `${guild.name}\r\n${guild.id}`);
     });
     
     // Set activity message
