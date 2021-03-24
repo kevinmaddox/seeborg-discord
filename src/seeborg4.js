@@ -145,15 +145,6 @@ class SeeBorg4 {
       this.database[guild.id].init();
     });
     
-    // Get lists of connected guild custom emojis.
-    this.emoji = {};
-    this.client.guilds.forEach(guild => {
-      this.emoji[guild.id] = [];
-      guild.emojis.forEach(emoji => {
-        this.emoji[guild.id].push(emoji.id);
-      });
-    });
-    
     // Set activity message
     if (this.config.activity && this.config.activityType) {
         logger.info('Attempting to set status message');

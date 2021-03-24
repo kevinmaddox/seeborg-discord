@@ -34,10 +34,6 @@ class Reaction {
    * @memberof Reaction
    */
   apply(message) {
-    // Back out if server doesn't have any custom emoji
-    if (this.bot.emoji[message.guild.id].length === 0)
-      return false;
-    
     if (this.shouldReact(message)) {
       this.react(message);
       return true;
@@ -105,14 +101,21 @@ class Reaction {
    * @memberof Reaction
    */
   react(message) {
-    const emojiList = this.bot.emoji[message.guild.id];
-    this.bot.config.globalEmoji.forEach(globalId => {
-        if (globalId !== message.guild.id) {
-            emojiList.push(this.bot.emoji[globalId]);
-        }
+    const serverIds = (this.bot.config.globalEmoji) ? [message.guild.id].concat(this.bot.config.globalEmoji) : [message.guild.id];
+    const emojiList = [];
+    _.uniq(serverIds).forEach(id => {
+        this.bot.client.guilds.get(id).emojis.forEach(emoji => {
+        if (emoji.available)
+          emojiList.push(emoji.id);
+      });
     });
-    const n = Math.floor(Math.random()*this.bot.emoji[message.guild.id].length);
-    const emoji = this.bot.emoji[message.guild.id][n];
+    
+    if (emojiList.length === 0)
+      return;
+    
+    const n = Math.floor(Math.random()*emojiList.length);
+    const emoji = emojiList[n];
+    logger.debug('Reacting with emoji: ' + emoji);
     message.react(emoji).catch((err) => {
       logger.error(err);
     });

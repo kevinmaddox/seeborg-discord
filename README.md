@@ -1,5 +1,11 @@
 # SeeBorg-Discord
 
+## FORKED VERSION
+
+I've added a bunch of stuff based on my own needs/desires. Please see FORK-NOTES.md for more information.
+
+## ORIGINAL README
+
 SeeBorg-Discord is my own version of the SeeBorg IRC chatbot by Eugene Bujak.
 It works with Discord and was tested on Node.js v9.4.0.
 It can learn from things other people say and make its own responses.
