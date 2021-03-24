@@ -1,6 +1,10 @@
 token: YOUR_TOKEN_HERE
 databasePath: dictionaries
 autoSavePeriod: 200
+activityType: '' # https://discord.js.org/#/docs/main/stable/typedef/ActivityType
+activity: ''
+globalEmoji: # Specify server IDs the bot is in that have emoji you want the bot to use globally
+  - '824047145342074881'
 behavior:
   speaking: true
   learning: true
@@ -19,6 +23,7 @@ behavior:
   ignoredUsers:
     - '206070301824516096'
 channelOverrides:
+  # - Channel Example 01 -------------------------------------------------------
   -
     channelId: '300041258280419331'
     behavior:
@@ -32,10 +37,12 @@ channelOverrides:
         ignoredUsers:
           - '206070301824516096'
           - '136625160970174464'
+  # - Channel Example 02 -------------------------------------------------------
   -
     channelId: '432947239472389478'
     behavior:
       speaking: false
+  # - Channel Example 03 -------------------------------------------------------
   -
     channelId: '238294832098420983'
     behavior:

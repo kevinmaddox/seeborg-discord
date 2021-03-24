@@ -153,6 +153,14 @@ class SeeBorg4 {
         this.emoji[guild.id].push(emoji.id);
       });
     });
+    
+    // Set activity message
+    if (this.config.activity && this.config.activityType) {
+        logger.info('Attempting to set status message');
+        this.client.user.setActivity(this.config.activity, { type: this.config.activityType })
+          .then(presence => logger.info('Status message set!'))
+          .catch(console.error);
+    }
   }
 
   onMessage(message) {

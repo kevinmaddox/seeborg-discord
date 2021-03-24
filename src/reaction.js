@@ -105,6 +105,12 @@ class Reaction {
    * @memberof Reaction
    */
   react(message) {
+    const emojiList = this.bot.emoji[message.guild.id];
+    this.bot.config.globalEmoji.forEach(globalId => {
+        if (globalId !== message.guild.id) {
+            emojiList.push(this.bot.emoji[globalId]);
+        }
+    });
     const n = Math.floor(Math.random()*this.bot.emoji[message.guild.id].length);
     const emoji = this.bot.emoji[message.guild.id][n];
     message.react(emoji).catch((err) => {
