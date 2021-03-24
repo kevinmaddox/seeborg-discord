@@ -1,12 +1,14 @@
 token: YOUR_TOKEN_HERE
-databasePath: dictionary.json
+databasePath: dictionaries
 autoSavePeriod: 200
 behavior:
   speaking: true
   learning: true
+  reacting: true
   replyRate: 33.3
   replyMention: 50.0
   replyMagic: 100.0
+  reactRate: 33.3
   magicPatterns:
     - dinosaur
     - magic
@@ -23,6 +25,7 @@ channelOverrides:
         replyRate: 1.0
         replyMention: 50.0
         replyMagic: 100.0
+        reactRate: 2.0
         magicPatterns:
           - please
           - cringe

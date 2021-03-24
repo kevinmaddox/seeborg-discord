@@ -16,9 +16,6 @@ const utilmod = require("./utilmod");
 const {
   SeeBorg4
 } = seeborg4;
-const {
-  Database
-} = require("./database");
 
 const parser = new ArgumentParser({
   version: "4.0.4_1",
@@ -108,18 +105,6 @@ async function verifyRequirements(config) {
 }
 
 /**
- * Loads the database.
- *
- * @param {*} config Configuration file that specifies the database path
- * @returns {Database}
- */
-function loadDatabase(config) {
-  const database = new Database(config.databasePath);
-  database.init();
-  return database;
-}
-
-/**
  * Creates the chat client.
  *
  * @returns {Discord.Client}
@@ -135,11 +120,10 @@ function makeClient() {
  *
  * @param {*} client The chat client
  * @param {*} config The configuration for the bot
- * @param {*} database The database to be used by the bot
  * @returns {SeeBorg4} The bot
  */
-function makeBot(client, config, database) {
-  const bot = new SeeBorg4(client, config, database);
+function makeBot(client, config) {
+  const bot = new SeeBorg4(client, config);
   return bot;
 }
 
@@ -154,12 +138,10 @@ function makeBot(client, config, database) {
     logger.error("The bot will not be started because the verification of requirements failed.");
     process.exit(0);
   }
-  logger.info("Loading database.");
-  const database = loadDatabase(config);
   logger.info("Creating Discord client.");
   const client = makeClient();
   logger.info("Creating the bot.");
-  const bot = makeBot(client, config, database);
+  const bot = makeBot(client, config);
   logger.info("Starting the bot.");
   bot.start();
 })();

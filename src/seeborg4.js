@@ -18,6 +18,12 @@ const {
 const {
   Answerer
 } = require("./answerer");
+const {
+  Reaction
+} = require("./reaction");
+const {
+  Database
+} = require("./database");
 
 const instances = new Set();
 
@@ -39,32 +45,31 @@ class SeeBorg4 {
    *
    * @param {*} client The chat client to use
    * @param {*} config The configuration file to use
-   * @param {*} database The database to use
    * @memberof SeeBorg4
    *
    * @prop {*} client
    * @prop {*} config
-   * @prop {*} database
    *
    * @prop {PluginManager} pluginManager
    * @prop {CommandHandler} commandHandler
    * @prop {VoiceHandler} voiceHandler
    * @prop {Learner} learner
    * @prop {Answerer} answerer
+   * @prop {Reaction} reaction
    *
    * @prop {?Number} autoSaveJobId ID of the JavaScript timer running the autosave job
    */
-  constructor(client, config, database) {
+  constructor(client, config) {
     instances.add(this);
     this.client = client;
     this.config = config;
-    this.database = database;
 
     this.pluginManager = new PluginManager(this);
     this.commandHandler = new CommandHandler(this);
     this.voiceHandler = new VoiceHandler(this);
     this.learner = new Learner(this);
     this.answerer = new Answerer(this);
+    this.reaction = new Reaction(this);
 
     this.autoSaveJobId = null;
   }
@@ -102,8 +107,10 @@ class SeeBorg4 {
     logger.info("Destroy: Stopping auto save job.");
     clearInterval(this.autoSaveJobId);
 
-    logger.info("Destroy: Saving before quitting.");
-    this.database.save();
+    logger.info("Destroy: Saving dictionaries before quitting.");
+    for (const guildId in this.database) {
+      this.database[guildId].save();
+    }
 
     logger.info("Destroy: Removing bot from list of instances.");
     assert(instances.delete(this));
@@ -118,14 +125,34 @@ class SeeBorg4 {
 
   startAutoSaveJob() {
     this.autoSaveJobId = setInterval(() => {
-      logger.info("Saving dictionary...");
-      this.database.save();
+      logger.info("Saving dictionaries...");
+      for (const guildId in this.database) {
+        this.database[guildId].save();
+      }
       logger.info("Saved!");
     }, this.config.autoSavePeriod * 1000);
   }
 
   onReady() {
     logger.info("Connected to Discord!");
+    
+    // Load databases.
+    this.database = {};
+    logger.info('Connected servers:');
+    this.client.guilds.forEach(guild => {
+      logger.info(guild.name + ' (id: ' + guild.id + ')');
+      this.database[guild.id] = new Database(this.config.databasePath + '/' + guild.id + '.json');
+      this.database[guild.id].init();
+    });
+    
+    // Get lists of connected guild custom emojis.
+    this.emoji = {};
+    this.client.guilds.forEach(guild => {
+      this.emoji[guild.id] = [];
+      guild.emojis.forEach(emoji => {
+        this.emoji[guild.id].push(emoji.id);
+      });
+    });
   }
 
   onMessage(message) {
@@ -138,6 +165,7 @@ class SeeBorg4 {
     }
     this.answerer.apply(message);
     this.learner.apply(message);
+    this.reaction.apply(message);
   }
 
   /**

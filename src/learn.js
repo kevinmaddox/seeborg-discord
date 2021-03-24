@@ -27,7 +27,7 @@ class Learner {
    */
   apply(message) {
     if (this.shouldLearn(message)) {
-      this.learn(message.cleanContent);
+      this.learn(message);
       return true;
     }
     return false;
@@ -45,7 +45,8 @@ class Learner {
       logger.debug("false: User is ignored");
       return false;
     }
-
+    
+    // Bot should not speak if speaking is set to false
     if (!confmod.behavior(this.bot.config, message.channel.id, "learning")) {
       logger.debug("false: learning=false in " + message.channel.id);
       return false;
@@ -67,9 +68,10 @@ class Learner {
    * @returns {boolean} True if no errors occurred while learning.
    * @memberof Learner
    */
-  learn(line) {
+  learn(message) {
+    const line = message.cleanContent;
     try {
-      this.bot.database.insertLine(line.toLowerCase());
+      this.bot.database[message.guild.id].insertLine(line.toLowerCase());
     } catch (err) {
       logger.error(err);
       return false;

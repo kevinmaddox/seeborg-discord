@@ -120,7 +120,7 @@ class Answerer {
    * @memberof Answerer
    */
   replyWithAnswer(message) {
-    const response = this.computeAnswer(message.cleanContent);
+    const response = this.computeAnswer(message);
 
     if (response === null) {
       logger.debug("ComputeAnswer returned empty answer.");
@@ -138,10 +138,11 @@ class Answerer {
    * @returns {string} The answer
    * @memberof Answerer
    */
-  computeAnswer(toLine) {
+  computeAnswer(message) {
+    const toLine = message.cleanContent;
     const lowercaseLine = toLine.toLowerCase();
     const words = stringUtil.splitWords(lowercaseLine);
-    const knownWords = words.filter((word) => this.bot.database.isWordKnown(word));
+    const knownWords = words.filter((word) => this.bot.database[message.guild.id].isWordKnown(word));
 
     if (knownWords.length === 0) {
       logger.debug("No sentences with " + words + " found");
@@ -149,7 +150,7 @@ class Answerer {
     }
 
     const pivot = _.sample(knownWords);
-    const sentences = this.bot.database.sentencesWithWord(pivot);
+    const sentences = this.bot.database[message.guild.id].sentencesWithWord(pivot);
 
     if (sentences.length === 0) {
       return null;
