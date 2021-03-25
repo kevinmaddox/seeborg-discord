@@ -51,6 +51,12 @@ class Learner {
       logger.debug("false: learning=false in " + message.channel.id);
       return false;
     }
+    
+    // Bot should not speak if the database for the correlated server doesn't exist yet
+    if (typeof(this.bot.database[message.guild.id]) === 'undefined') {
+        logger.debug("false: Database for this guild does not exist");
+        return false;
+    }
 
     // Ignore messages that match the blacklist
     if (confmod.matchesBlacklistedPattern(this.bot.config, message.channel.id, message.cleanContent)) {

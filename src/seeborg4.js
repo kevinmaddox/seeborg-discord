@@ -124,6 +124,7 @@ class SeeBorg4 {
   registerListeners() {
     this.client.on("ready", this.onReady.bind(this));
     this.client.on("message", this.onMessage.bind(this));
+    this.client.on("guildCreate", this.onGuildCreate.bind(this));
   }
 
   startAutoSaveJob() {
@@ -142,18 +143,12 @@ class SeeBorg4 {
     // Load databases.
     this.database = {};
     logger.info('Connected servers:');
+    logger.info('--------------------------------');
     this.client.guilds.forEach(guild => {
-      logger.info(guild.name + ' (id: ' + guild.id + ')');
-      
-        // Load and initialize database for guild.
-      this.database[guild.id] = new Database(this.config.databasePath + '/' + guild.id + '.json');
-      this.database[guild.id].init();
-      
-      // Store separate txt file for info on which server this is, since a raw ID is not very descriptive
-      const infoFilePath = this.config.databasePath + '/' + guild.id + '.txt';
-      if (!fs.existsSync(infoFilePath))
-        writeFileAtomicSync(infoFilePath, `${guild.name}\r\n${guild.id}`);
+      logger.info(guild.name).info(guild.id).info('------------------');
+      this.loadDatabase(guild);
     });
+    logger.info('--------------------------------');
     
     // Set activity message
     if (this.config.activity && this.config.activityType) {
@@ -176,6 +171,25 @@ class SeeBorg4 {
     this.learner.apply(message);
     this.reaction.apply(message);
   }
+  
+  // This is actually the listener for joining a guild in this bot's case.
+  onGuildCreate(guild) {
+    logger.info(`Joined guild: ${guild.name} (${guild.id})`);
+    logger.info('Creating new dictionary for guild.');
+    this.loadDatabase(guild);
+  }
+  
+  loadDatabase(guild) {
+        // Load and initialize database for guild.
+      this.database[guild.id] = new Database(this.config.databasePath + '/' + guild.id + '.json');
+      this.database[guild.id].init();
+      
+      // Store separate txt file for info on which server this is, since a raw ID is not very descriptive
+      const infoFilePath = this.config.databasePath + '/' + guild.id + '.txt';
+      if (!fs.existsSync(infoFilePath))
+        writeFileAtomicSync(infoFilePath, `${guild.name}\r\n${guild.id}`);
+  }
+  
 
   /**
    * Returns true if the user is ignored in the given channel.

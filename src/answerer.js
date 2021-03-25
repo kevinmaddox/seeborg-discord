@@ -54,13 +54,19 @@ class Answerer {
       logger.debug("false: User is ignored");
       return false;
     }
-
+    
     // Bot should not speak if speaking is set to false
     if (!confmod.behavior(this.bot.config, message.channel.id, "speaking")) {
       logger.debug("false: speaking=false in " + message.channel.name);
       return false;
     }
-
+    
+    // Bot should not speak if the database for the correlated server doesn't exist yet
+    if (typeof(this.bot.database[message.guild.id]) === 'undefined') {
+        logger.debug("false: Database for this guild does not exist");
+        return false;
+    }
+    
     // Bot should not speak if they don't have permission
     if (message.guild !== null && message.guild !== undefined) {
       if (!message.channel.permissionsFor(message.guild.me).has("SEND_MESSAGES")) {
