@@ -25,3 +25,22 @@ Additionally, you can provide a list of server IDs via `globalEmoji`. When react
 ### Custom statuses
 
 You can use the configuration options `activityType` and `activity` to set the bot's current status. Please see <a href="https://discord.js.org/#/docs/main/stable/typedef/ActivityType">the official API documentation</a> for a list of Activity Types.
+
+# Planned Features
+
+0. [Administrative commands](#admin-commands)
+1. [Triggers](#triggers)
+
+---
+
+<a name="admin-commands"></a>
+
+### Administrative commands
+
+Commands to approved users to control the bot through Discord messages, like setting the reply rate. Planned format is: `@botname !replyrate 20`
+
+<a name="triggers"></a>
+
+### Triggers
+
+Way for the bot to respond to specific messages in specific ways.
