@@ -4,7 +4,6 @@ package-lock.json
 
 # SeeBorg4
 config.yml
-dictionary.json
 /tmp*/
 /*.log
 /dictionaries/

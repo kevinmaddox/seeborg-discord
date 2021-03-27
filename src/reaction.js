@@ -49,7 +49,7 @@ class Reaction {
    * @memberof SeeBorg4
    */
   shouldReact(message) {
-    if (this.bot.isIgnored(message.author, message.channel)) {
+    if (this.bot.isIgnored(message.author, message.channel, confmod.behavior(this.bot.config, message.channel.id, "reactToSelf"))) {
       logger.debug("false: User is ignored");
       return false;
     }

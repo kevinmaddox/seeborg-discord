@@ -13,6 +13,7 @@ behavior:
   replyMention: 50.0
   replyMagic: 100.0
   reactRate: 33.3
+  reactToSelf: true
   magicPatterns:
     - dinosaur
     - magic

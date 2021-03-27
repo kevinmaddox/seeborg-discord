@@ -196,12 +196,13 @@ class SeeBorg4 {
    *
    * @param {*} user The user
    * @param {*} channel The channel
+   * @param {*} respondToSelf A means to override the bot ignoring itself
    * @returns {boolean}
    * @memberof SeeBorg4
    */
-  isIgnored(user, channel) {
+  isIgnored(user, channel, respondToSelf) {
     // Ignore own messages
-    if (user.id === this.client.user.id) {
+    if (user.id === this.client.user.id && !respondToSelf) {
       return true;
     }
 
