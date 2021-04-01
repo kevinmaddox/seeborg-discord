@@ -37,7 +37,7 @@ You can use the configuration options `activityType` and `activity` to set the b
 
 ### Administrative commands
 
-Commands to approved users to control the bot through Discord messages, like setting the reply rate. Planned format is: `@botname !replyrate 20`
+Commands to approved users to control the bot through Discord messages, like setting the reply rate. Commands are already in place, I just want to add some useful default commands.
 
 <a name="triggers"></a>
 
