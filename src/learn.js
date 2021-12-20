@@ -41,8 +41,8 @@ class Learner {
    * @memberof Learner
    */
   shouldLearn(message) {
-    if (this.bot.isIgnored(message.author, message.channel)) {
-      logger.debug("false: User is ignored");
+    if (this.bot.isIgnoredTeacher(message.author, message.channel)) {
+      logger.debug("false: Teacher is ignored");
       return false;
     }
     

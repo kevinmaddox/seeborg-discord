@@ -213,6 +213,29 @@ class SeeBorg4 {
 
     return false;
   }
+  
+  /**
+   * Returns true if the teacher is ignored in the given channel.
+   *
+   * @param {*} user The teacher
+   * @param {*} channel The channel
+   * @param {*} respondToSelf A means to override the bot ignoring itself
+   * @returns {boolean}
+   * @memberof SeeBorg4
+   */
+  isIgnoredTeacher(user, channel, respondToSelf) {
+    // Ignore own messages
+    if (user.id === this.client.user.id && !respondToSelf) {
+      return true;
+    }
+
+    // Ignore users in the ignore list
+    if (confmod.isIgnoredTeacher(this.config, user.id, channel.id)) {
+      return true;
+    }
+
+    return false;
+  }
 }
 
 module.exports = {

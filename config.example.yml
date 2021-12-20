@@ -23,6 +23,8 @@ behavior:
     - fag(g(ot)?)?
   ignoredUsers:
     - '206070301824516096'
+  ignoredTeachers:
+    - '206070301824516096'
 channelOverrides:
   # - Channel Example 01 -------------------------------------------------------
   -

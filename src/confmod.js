@@ -59,6 +59,20 @@ function isIgnored(config, authorId, channelId) {
 }
 
 /**
+ * Returns true if the user with the provided authorId should not be learned
+ * from in the channel with the given channelId in the provided configuration
+ * object.
+ *
+ * @param {*} config The configuration object
+ * @param {string} authorId The ID of the message author
+ * @param {string} channelId The ID of the channel where the message is in
+ * @returns {boolean} True if the author is ignored
+ */
+function isIgnoredTeacher(config, authorId, channelId) {
+  return behavior(config, channelId, "ignoredTeachers").includes(authorId);
+}
+
+/**
  * Returns true if the line matches a blacklisted pattern for the channel with
  * the given channelId in the provided configuration object.
  *
@@ -135,6 +149,7 @@ module.exports = {
   loadConfig: loadConfig,
   verifyAndCorrectConfig: verifyAndCorrectConfig,
   isIgnored: isIgnored,
+  isIgnoredTeacher: isIgnoredTeacher,
   matchesBlacklistedPattern: matchesBlacklistedPattern,
   matchesMagicPattern: matchesMagicPattern,
   behavior: behavior
